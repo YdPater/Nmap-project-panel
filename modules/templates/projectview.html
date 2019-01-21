@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% block content %}
+<style media="screen">
+  #notesoutput{
+    max-width: 5%;
+  }
+  .card{
+    display: inline-block;
+  }
+  #id_field{
+    display: inline-block;
+  }
+  #note_field{
+    max-width: 600px;
+  }
+  div#loading {
+    width: 35px;
+    height: 35px;
+    display: none;
+    background: url("{{url_for('static', filename='loading.gif')}}") no-repeat;
+    cursor: wait;
+  }
+</style>
+<script type="text/javascript">
+  function loading(){
+    $("#loading").show()
+    $("#content").hide()
+  }
+</script>
+<br/>
+<div class="container">
+  {% if message == "notyours" %}
+  <div class="alert alert-warning" role="alert">
+    That scan is not yours!
+  </div>
+  {% elif message == "wrongproject" %}
+  <div class="alert alert-warning" role="alert">
+    That scan does not belong to this project!
+  </div>
+  {% elif message == "notexists" %}
+  <div class="alert alert-warning" role="alert">
+    That scan does not exists!
+  </div>
+  {% endif %}
+  <h1>Current project: {{project.naam}}</h1>
+  <hr class="my-4">
+  <h2>Scan results</h2>
+  <table class="table sortable">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Target</th>
+        <th scope="col">State</th>
+        <th scope="col">Portnumber</<th>
+        <th scope="col">Service</th>
+        <th scope="col">Product</th>
+        <th scope="col">Version</th>
+        <th scope="col">Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for scan in scans %}
+        <tr>
+          <td>{{scan.id}}</td>
+          <td>{{scan.target}}</td>
+          <td>{{scan.state}}</td>
+          <td>{{scan.port}}</td>
+          <td>{{scan.service}}</td>
+          <td>{{scan.product}}</td>
+          <th>{{scan.version}}</th>
+          <td id='notesoutput'>{{scan.notes}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+
+  </table>
+  <a class="btn btn-primary" data-toggle="collapse" href="#notesform" role="button" aria-expanded="false" aria-controls="notesform">
+    Update notes
+  </a>
+  <a class="btn btn-primary" href="/home/download/{{project.id}}">
+    Download results
+  </a>
+  <div class="collapse" id="notesform">
+    <br>
+    <form method="POST">
+        {{ form3.hidden_tag() }}
+        <div class="form-group" id="id_field">
+          {{ form3.id(class="form-control", placeholder="ID") }}
+        </div>
+        <div class="form-group" id="note_field">
+        {{ form3.note(class="form-control", style="min-height: 100px;", placeholder="Note") }}
+        </div>
+        {{ form3.submit(class="btn btn-primary") }}
+    </form>
+  </div>
+  <hr class="my-4">
+  <h3>Scan info</h3>
+  <br/>
+  <p>When the service scan option is enabled it will to take longer to complete but the the product information of the service will be retreivable.</p>
+  <p>When the page reloads but the results are not there, check the python terminal for any messages.
+  When the program gets an emtpy response it will print the target that caused the error.</p>
+  <br>
+  <div id="loading"></div>
+  <div class="card" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title">Manual scan</h5>
+      <div class="card-text">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+            {{ form.target.label }}<br/> {{ form.target(class="form-control", placeholder="127.0.0.1") }}
+            </div>
+            <div class="form-check">
+            {{ form.service(class="form-check-input") }} {{ form.service.label }}
+            </div>
+            <div class="form-check">
+            {{ form.ping(class="form-check-input") }} {{ form.ping.label }}
+            </div>
+            {{ form.submit(class="btn btn-primary", onclick="loading()") }}
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title">Target list scan</h5>
+      <div class="card-text">
+        <form method="POST" enctype="multipart/form-data">
+            {{ form2.hidden_tag() }}
+            <div class="form-group">
+            <p>Text file with every target on a new line.</p> {{ form2.targetfile(class="form-control-file") }}
+            </div>
+            <div class="form-check">
+            {{ form2.service(class="form-check-input") }} {{ form2.service.label }}
+            </div>
+            <div class="form-check">
+            {{ form2.ping(class="form-check-input") }} {{ form2.ping.label }}
+            </div>
+            {{ form2.submit(class="btn btn-primary", onclick="loading()") }}
+        </form>
+      </div>
+    </div>
+  </div>
+  {% if current_user.id == project.creator %}
+  <hr class="my-4">
+  <h3>Invite other users to this project</h3>
+  <form method="POST">
+    {{ form4.hidden_tag() }}
+    <div class="form-group">
+    {{ form4.email(class="form-control", placeholder="example@example.com") }}
+    </div>
+    {{ form4.submit(class="btn btn-primary") }}
+  </form>
+  <table class="table sortable">
+      <thead>
+      <tr>
+        <th scope="col">Username</th>
+        <th scope="col">Email</th>
+        <th scope="col">Revoke</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for user in userlist %}
+        <tr>
+          <td>{{user.username}}</td>
+          <td>{{user.email}}</td>
+          <td>
+            <form method="POST" action="/home/revoke/{{project.id}}/{{user.id}}">
+              <input class="btn btn-primary" type="submit" name="revokebutton" value="Revoke"/>
+            </form>
+          </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</div>
+
+{% endblock %}

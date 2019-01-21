@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <link rel="stylesheet" href="{{url_for('static', filename='style1.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='style2.css')}}">
+    <script src="{{url_for('static', filename='script1.js')}}"></script>
+    <script src="{{url_for('static', filename='script2.js')}}"></script>
+    <script src="{{url_for('static', filename='script3.js')}}"></script>
+    <script src="{{url_for('static', filename='script4.js')}}"></script>
+    <link href="{{url_for('static', filename='signin.css')}}" rel="stylesheet">
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body class="text-center">
+    <div class="container">
+        <h1 class="display-4">Nmap Web Panel</h1>
+        <br>
+        <p>Log in to start.</p>
+        {% if message == 'creds' %}
+        <div class="alert alert-warning" role="alert">
+          Wrong credentials!
+        </div>
+        {% elif message == 'email' %}
+        <div class="alert alert-warning" role="alert">
+          Please fill in the fields correctly!
+        </div>
+        {% elif message == 'account' %}
+        <div class="alert alert-success" role="alert">
+          Your account got created successfully! Log in to continue.
+        </div>
+        {% endif %}
+        <form method="POST" class="form-signin">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.email(class="form-control", placeholder="Email") }}
+            </div>
+            <div class="form-group">
+                {{ form.password(class="form-control", placeholder="Password") }}
+            </div>
+            {{ form.submit(class="btn btn-primary") }}
+        </form>
+        <br/>
+        <small>Need an account? Register over <a href="{{ url_for("register") }}">here.</a></small>
+    </div>
+  </body>
+</html>

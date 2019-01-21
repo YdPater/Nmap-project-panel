@@ -1,0 +1,9 @@
+Target,State,Portnumber,Service,Product,Version,Notes
+192.168.1.109,open,21,ftp,,,
+192.168.1.109,open,22,ssh,,,
+192.168.1.109,open,80,http,,,
+192.168.1.109,open,111,rpcbind,,,
+192.168.1.109,open,139,netbios-ssn,,,
+192.168.1.109,open,443,https,,,
+192.168.1.109,open,445,microsoft-ds,,,
+192.168.1.109,open,5900,vnc,,,

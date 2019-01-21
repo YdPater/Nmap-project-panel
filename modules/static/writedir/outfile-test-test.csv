@@ -1,0 +1,4 @@
+Target,State,Portnumber,Service,Product,Version,Notes
+127.0.0.1,open,22,ssh,,,
+127.0.0.1,open,631,ipp,,,
+127.0.0.1,open,5000,upnp,,,
