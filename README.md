@@ -1,4 +1,4 @@
-<h1>Nmap project panel</h>
+<h1>Nmap project panel</h1>
 <p>Python script managing nmap results in projects.<br>
 I created it to practice the Flask framework for a school assignment.</p>
 
