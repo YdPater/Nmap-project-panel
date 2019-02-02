@@ -17,6 +17,7 @@ In the root folder, there is a requierements.txt file. Use this to install the d
 
 <h2>Future development</h2>
 <p> - More Nmap settings (sC, O, etc.)<br>
-    - A discovery panel to scan an IP range for online devices.</p>
+    - A discovery panel to scan an IP range for online devices
+    - Threaded scanning.</p>
 
 
