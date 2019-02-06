@@ -223,7 +223,8 @@ def check_threadcount():
     else:
         return '''<button type="button" class="btn btn-primary">
                     Scan status: <span class="badge badge-light">Done!</span>
-                </button>'''
+                </button>
+                <button class="btn btn-outline-primary" value="Refresh" onClick="window.location.reload()">Refresh</button'''
 
 
 @app.route('/logout')
