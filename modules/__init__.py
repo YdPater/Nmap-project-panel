@@ -9,8 +9,6 @@ from flask_login import LoginManager
 login_manager = LoginManager()
 
 app = Flask(__name__)
-
-# Often people will also separate these into a separate config.py file
 app.config['SECRET_KEY'] = 'mysecretkey'
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database', 'data.sqlite')

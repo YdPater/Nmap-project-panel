@@ -1,4 +1,5 @@
 <h1>Nmap project panel</h1>
+
 <p>Python script managing nmap results in projects.<br>
 I created it to practice the Flask framework for a school assignment.</p>
 
@@ -17,7 +18,6 @@ In the root folder, there is a requierements.txt file. Use this to install the d
 
 <h2>Future development</h2>
 <p> - More Nmap settings (sC, O, etc.)<br>
-    - A discovery panel to scan an IP range for online devices <br>
-    - Threaded scanning.</p>
+    - A discovery panel to scan an IP range for online devices.</p>
 
 
