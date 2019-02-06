@@ -217,14 +217,14 @@ def register():
 def check_threadcount():
     active = activeCount()
     if active > 3:
-        return '''<button type="button" class="btn btn-warning">
+        return '''<button type="button" class="btn btn-outline-warning">
                     Scan status: <span class="badge badge-light">Active!</span>
                 </button>'''
     else:
-        return '''<button type="button" class="btn btn-primary">
+        return '''<button type="button" class="btn btn-outline-primary">
                     Scan status: <span class="badge badge-light">Done!</span>
                 </button>
-                <button class="btn btn-outline-primary" value="Refresh" onClick="window.location.reload()">Refresh</button'''
+                <button class="btn btn-primary" value="Refresh" onClick="window.location.reload()">Refresh</button'''
 
 
 @app.route('/logout')
