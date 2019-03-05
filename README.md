@@ -1,5 +1,5 @@
 <h1>Nmap project panel</h1>
-I made this script for a school assignment. It is build in python (flask) and it uses a database to store the scan results and it uses a html front-end to display the information. 
+I made this script for a school assignment. It is build in python (flask) and it uses a database to store the scan results and it uses a html front-end to display the information. These scan results are linked to a project. As the owner of the project, you can invite other users to that project so that user will be able to view the results, add notes and run new scan but not delete them. 
 
 <h2>Installation</h2>
 <p>It is recommended to install the python dependencies in a separate virtual environment.
