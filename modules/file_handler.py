@@ -1,7 +1,7 @@
 from os import listdir, remove
 from os.path import join
 from flask import url_for, current_app
-from modules import app
+from modules.config import app
 from werkzeug.utils import secure_filename
 
 

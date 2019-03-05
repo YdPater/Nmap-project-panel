@@ -1,5 +1,5 @@
 import nmap
-from modules import app
+from modules.config import app
 from modules.database.tasks import save_scandata
 from modules.file_handler import delete_file
 from os.path import join

@@ -1,4 +1,4 @@
-from modules import db, app
+from modules.config import db, app
 from modules.database.models import Scandata
 
 

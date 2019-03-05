@@ -1,4 +1,4 @@
-from modules import app, db
+from modules.config import app, db
 from flask import render_template, redirect, request, url_for, send_from_directory
 from flask_login import login_user, login_required, logout_user, current_user
 from modules.database.models import User, Projects, Scandata, Invites
@@ -11,38 +11,33 @@ from threading import Thread, activeCount
 import csv
 
 
-def get_userprojects(uid):
-    list = Projects.query.filter_by(creator=uid).all()
-    return list
-
-
 # Base route, login is required. This page shows the created projects for the
 # current user.
 @app.route("/", methods=["GET", "POST"])
 @app.route("/home", methods=["GET", "POST"])
 @login_required
 def home():
-    prlist = get_userprojects(current_user.id)
+    prlist = Projects.query.filter_by(creator=current_user.id).all()
     invited_pr = Invites.query.filter_by(uid=current_user.id).all()
     invited_pr_data = []
     for project in invited_pr:
         pr = Projects.query.filter_by(id=project.project_id).first()
         invited_pr_data.append(pr)
     form = Projectform()
-    
+
     # When the form posts to this route...
     if request.method == "POST":
-        
+
         # Check if the form is valid
         if form.validate_on_submit():
             prname = form.projectname.data
-            
+
             # Check if the projectname does not already exists
             if Projects.query.filter_by(naam=prname, creator=current_user.id).first():
                 return render_template("home.html", form=form, message="exists", lijst=prlist)
             creator = current_user.id
             description = form.description.data
-            
+
             # Create a new project and save it to the database
             project = Projects(prname, description, creator)
             save_to_db(project)
@@ -57,7 +52,7 @@ def projectview(projectname):
     current_project = authorise(current_user.id, projectname, Invites, Projects)
     if not current_project:
         return render_template("error_pages/404.html")
-    
+
     # Query the database for existing scans and create user forms
     existing_scans = Scandata.query.filter_by(project_id=current_project.id).all()
     form = Scanform()
@@ -84,7 +79,7 @@ def projectview(projectname):
             list_tread = Thread(target=run_list_scan, args=(arguments, current_project, filename))
             list_tread.start()
             return redirect(url_for('projectview', projectname=current_project.id))
-        
+
         elif updateform.validate_on_submit():
             projectid = Scandata.query.filter_by(id=updateform.id.data).first()
             if not projectid:
@@ -94,7 +89,7 @@ def projectview(projectname):
             project_id_list = []
             for id in projects_owned:
                 project_id_list.append(id.id)
-            if invited_pr:    
+            if invited_pr:
                 if projectid.project_id != invited_pr.project_id and projectid.project_id not in project_id_list:
                     return redirect(url_for('projectview', projectname=current_project.id))
             elif projectid.project_id != current_project.id:
@@ -102,7 +97,7 @@ def projectview(projectname):
             Scandata.query.filter_by(id=updateform.id.data).update(dict(notes=updateform.note.data))
             db.session.commit()
             return redirect(url_for('projectview', projectname=current_project.id))
-        
+
         elif inviteform.validate_on_submit():
             if current_user.id != current_project.creator:
                 return render_template('/static/error_pages/404.html')
@@ -122,6 +117,7 @@ def projectview(projectname):
 
 
 @app.route("/home/download/<projectname>")
+@login_required
 def download_scanoutput(projectname):
     current_project = authorise(current_user.id, projectname, Invites, Projects)
     if not current_project:
@@ -219,7 +215,8 @@ def check_threadcount():
     if active > 3:
         return '''<button type="button" class="btn btn-outline-warning">
                     Scan status: <span class="badge badge-light">Active!</span>
-                </button>'''
+                </button>
+                <button class="btn btn-primary" value="Refresh" onClick="window.location.reload()">Refresh</button'''
     else:
         return '''<button type="button" class="btn btn-outline-primary">
                     Scan status: <span class="badge badge-light">Done!</span>
@@ -245,4 +242,4 @@ def internal_error(e):
 
 
 if __name__ == '__main__':
-    app.run(host="localhost", debug=True)
+    app.run(host="0.0.0.0", debug=True)
